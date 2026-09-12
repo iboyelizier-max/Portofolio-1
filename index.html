@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMIR | Premium Futuristic Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.0/vanilla-tilt.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        neonCyan: '#00E5FF',
+                        electricBlue: '#4D6FFF',
+                        neonPurple: '#8B5CF6',
+                        neonPink: '#FF4FD8',
+                        magenta: '#D946EF',
+                        darkBg: '#030014'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Base Styles & Reset */
+        * {
+            cursor: none !important;
+            scroll-behavior: smooth;
+        }
+        body {
+            background-color: #030014;
+            color: #ffffff;
+            overflow-x: hidden;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030014;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, #00E5FF, #8B5CF6);
+            border-radius: 4px;
+        }
+
+        /* Custom Cursor */
+        .custom-cursor {
+            width: 8px;
+            height: 8px;
+            background: #fff;
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: width 0.2s, height 0.2s;
+        }
+        .custom-cursor-glow {
+            width: 40px;
+            height: 40px;
+            border: 1px solid rgba(0, 229, 255, 0.4);
+            border-radius: 50%;
+            position: fixed;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9998;
+            background: rgba(0, 229, 255, 0.03);
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+            transition: transform 0.1s cubic-bezier(0.175, 0.885, 0.32, 1.275), background 0.3s, border 0.3s;
+        }
+
+        /* Noise Overlays */
+        .noise-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            content: "";
+            opacity: 0.02;
+            pointer-events: none;
+            z-index: 50;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3c/svg%3e");
+        }
+
+        /* Ambient Orbs Background */
+        .aurora-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            overflow: hidden;
+            filter: blur(140px);
+            opacity: 0.45;
+            pointer-events: none;
+        }
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            mix-blend-mode: screen;
+            animation: floatOrb 20s infinite alternate ease-in-out;
+        }
+        @keyframes floatOrb {
+            0% { transform: translate(0px, 0px) scale(1); }
+            50% { transform: translate(100px, 80px) scale(1.2); }
+            100% { transform: translate(-60px, 150px) scale(0.9); }
+        }
+
+        /* Glassmorphism & Borders Styling inspired by Flagship Assets */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .premium-btn {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4), 
+                        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .premium-btn::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: 0.6s;
+        }
+        .premium-btn:hover::before {
+            left: 100%;
+        }
+        
+        /* Neon Glow Utility classes */
+        .neon-border-glow:hover {
+            border-color: #00E5FF;
+            box-shadow: 0 0 25px rgba(0, 229, 255, 0.35), inset 0 0 10px rgba(0, 229, 255, 0.1);
+        }
+        .text-glow-cyan { text-shadow: 0 0 15px rgba(0, 229, 255, 0.6); }
+        .text-glow-purple { text-shadow: 0 0 15px rgba(139, 92, 246, 0.6); }
+        .text-glow-pink { text-shadow: 0 0 15px rgba(255, 79, 216, 0.6); }
+
+        /* Particles container fill setup */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Dynamic Ribbon Border Animation Effect */
+        .animated-gradient-border {
+            position: relative;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.02);
+            z-index: 1;
+        }
+        .animated-gradient-border::before {
+            content: '';
+            position: absolute;
+            top: -1.5px; left: -1.5px; right: -1.5px; bottom: -1.5px;
+            background: linear-gradient(45deg, #00E5FF, #4D6FFF, #8B5CF6, #FF4FD8, #00E5FF);
+            background-size: 400%;
+            z-index: -1;
+            border-radius: 1.05rem;
+            opacity: 0.15;
+            transition: opacity 0.3s ease;
+        }
+        .animated-gradient-border:hover::before {
+            opacity: 1;
+            animation: gradientMove 8s linear infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Portfolio Active Tab Styling */
+        .filter-btn.active {
+            background: linear-gradient(135deg, #00E5FF 0%, #4D6FFF 100%);
+            color: #000;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+            border-color: transparent;
+        }
+
+        /* Ripple Effect Graphic Style */
+        .ripple {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+        @keyframes ripple-animation {
+            to { transform: scale(4); opacity: 0; }
+        }
+    </style>
+</head>
+<body class="antialiased select-none">
+
+    <div class="noise-bg"></div>
+    <div id="particles-js"></div>
+
+    <div class="aurora-bg">
+        <div class="orb w-[500px] h-[500px] bg-neonCyan top-[-10%] left-[-10%]"></div>
+        <div class="orb w-[600px] h-[600px] bg-neonPurple bottom-[-20%] right-[-10%] animation-delay-2000"></div>
+        <div class="orb w-[400px] h-[400px] bg-neonPink top-[40%] left-[50%] animation-delay-4000"></div>
+    </div>
+
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="custom-cursor-glow" id="cursor-glow"></div>
+
+    <header class="fixed top-6 left-0 w-full z-50 px-4">
+        <nav class="max-w-6xl mx-auto glass-panel rounded-2xl px-6 py-3 flex justify-between items-center border border-white/10 shadow-[0_10px_50px_rgba(0,0,0,0.5)] navbar-container">
+            <a href="#home" class="text-xl font-extrabold bg-gradient-to-r from-neonCyan via-electricBlue to-neonPurple bg-clip-text text-transparent tracking-wider text-glow-cyan">
+                AMIR<span class="text-white">.</span>
+            </a>
+            
+            <div class="hidden md:flex items-center gap-1">
+                <a href="#home" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">Home</a>
+                <a href="#about" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">About</a>
+                <a href="#skills" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">Skills</a>
+                <a href="#portfolio" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">Portfolio</a>
+                <a href="#services" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">Services</a>
+                <a href="#experience" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">Experience</a>
+                <a href="#contact" class="nav-link px-4 py-2 text-sm font-medium text-gray-400 hover:text-white rounded-xl transition-all duration-300 relative">Contact</a>
+            </div>
+
+            <div class="hidden md:block">
+                <a href="#contact" class="premium-btn magnetic-target px-5 py-2.5 rounded-xl text-xs font-bold tracking-widest text-neonCyan border border-neonCyan/30 neon-border-glow flex items-center gap-2">
+                    HIRE ME <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                </a>
+            </div>
+
+            <button class="md:hidden text-white focus:outline-none w-10 h-10 flex flex-col justify-center items-center gap-1.5" id="mobile-menu-btn">
+                <span class="w-6 h-0.5 bg-white transition-all duration-300" id="line1"></span>
+                <span class="w-6 h-0.5 bg-white transition-all duration-300" id="line2"></span>
+                <span class="w-6 h-0.5 bg-white transition-all duration-300" id="line3"></span>
+            </button>
+        </nav>
+
+        <div class="md:hidden absolute top-24 left-4 right-4 glass-panel border border-white/10 rounded-2xl p-6 hidden flex-col gap-4 shadow-2xl opacity-0 transform -translate-y-4 transition-all duration-300" id="mobile-menu">
+            <a href="#home" class="mobile-nav-link text-lg font-semibold text-gray-300 border-b border-white/5 pb-2">Home</a>
+            <a href="#about" class="mobile-nav-link text-lg font-semibold text-gray-300 border-b border-white/5 pb-2">About</a>
+            <a href="#skills" class="mobile-nav-link text-lg font-semibold text-gray-300 border-b border-white/5 pb-2">Skills</a>
+            <a href="#portfolio" class="mobile-nav-link text-lg font-semibold text-gray-300 border-b border-white/5 pb-2">Portfolio</a>
+            <a href="#services" class="mobile-nav-link text-lg font-semibold text-gray-300 border-b border-white/5 pb-2">Services</a>
+            <a href="#experience" class="mobile-nav-link text-lg font-semibold text-gray-300 border-b border-white/5 pb-2">Experience</a>
+            <a href="#contact" class="mobile-nav-link text-lg font-semibold text-gray-300 pb-2">Contact</a>
+        </div>
+    </header>
+
+    <section id="home" class="min-h-screen pt-32 flex items-center justify-center relative px-4 overflow-hidden">
+        <div class="max-w-6xl mx-auto text-center z-10">
+            <div class="inline-flex items-center gap-2 glass-panel px-4 py-2 rounded-full border border-white/10 mb-6 animate-bounce shadow-[0_0_15px_rgba(255,255,255,0.05)]">
+                <span class="w-2 h-2 rounded-full bg-neonCyan animate-ping"></span>
+                <span class="text-xs font-semibold tracking-widest text-gray-300 uppercase">Available for Flagship Projects</span>
+            </div>
+
+            <h1 class="text-5xl md:text-8xl font-black tracking-tight mb-4 text-white leading-none">
+                AMIR <span class="bg-gradient-to-r from-neonCyan via-electricBlue via-neonPurple to-neonPink bg-clip-text text-transparent text-glow-purple" id="hero-name">IBRAHIM</span>
+            </h1>
+
+            <div class="h-16 flex items-center justify-center mb-8">
+                <h3 class="text-2xl md:text-4xl font-bold tracking-wide text-gray-300">
+                    Creative <span id="typing-text" class="text-neonCyan text-glow-cyan font-extrabold border-r-2 border-neonCyan/80 pr-1"></span>
+                </h3>
+            </div>
+
+            <p class="max-w-2xl mx-auto text-gray-400 text-sm md:text-base mb-12 leading-relaxed font-light">
+                Membangun ekosistem digital kelas dunia dengan visual futuristik mewah, performa maksimal, dan interaksi premium yang memberikan kesan tak terlupakan.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6">
+                <a href="#portfolio" class="premium-btn magnetic-target px-8 py-4 rounded-2xl font-bold text-sm text-black bg-gradient-to-r from-neonCyan via-electricBlue to-neonPurple border-0 shadow-[0_0_30px_rgba(0,229,255,0.3)] hover:shadow-[0_0_45px_rgba(0,229,255,0.6)] transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto">
+                    EXPLORE PORTFOLIO
+                </a>
+                <a href="#contact" class="premium-btn magnetic-target px-8 py-4 rounded-2xl font-bold text-sm text-white hover:text-neonPink border border-white/10 hover:border-neonPink/50 hover:shadow-[0_0_30px_rgba(255,79,216,0.3)] transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto flex items-center justify-center gap-2">
+                    <i class="fa-regular fa-envelope"></i> CONTACT ME
+                </a>
+                <a href="#" class="premium-btn magnetic-target px-6 py-4 rounded-2xl font-bold text-sm text-gray-400 hover:text-white border border-white/5 hover:border-white/20 transform hover:-translate-y-1 transition-all duration-300 w-full sm:w-auto flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-download"></i> DOWNLOAD CV
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute bottom-10 left-1/2 transform -translate-x-1/2 flex flex-col items-center gap-2 opacity-60">
+            <div class="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center p-1">
+                <div class="w-1.5 h-3 bg-neonCyan rounded-full animate-bounce"></div>
+            </div>
+            <span class="text-[10px] tracking-widest font-bold text-gray-500 uppercase">Scroll Down</span>
+        </div>
+    </section>
+
+    <section id="about" class="py-32 px-4 relative max-w-6xl mx-auto">
+        <div class="text-center mb-20 section-header">
+            <h4 class="text-xs font-bold tracking-widest text-neonCyan uppercase mb-2">01 / DISCOVER ME</h4>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white">About My Creative Vision</h2>
+            <div class="w-16 h-1 bg-gradient-to-r from-neonCyan to-neonPurple mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-5 flex justify-center scroll-reveal-left">
+                <div class="animated-gradient-border p-1 w-full max-w-sm" data-tilt data-tilt-max="15" data-tilt-speed="400">
+                    <div class="glass-panel rounded-2xl overflow-hidden relative aspect-square flex flex-col justify-center items-center p-8 border border-white/5 shadow-2xl">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-neonPurple/20 via-transparent to-neonCyan/20 opacity-40"></div>
+                        <div class="w-48 h-48 rounded-full bg-gradient-to-r from-neonCyan via-electricBlue to-magenta p-1 mb-6 relative z-10 shadow-[0_0_40px_rgba(0,229,255,0.2)]">
+                            <div class="w-full h-full rounded-full bg-[#090521] flex items-center justify-center overflow-hidden">
+                                <img src="foto.png" alt="Amir" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white relative z-10 mb-1">AMIR</h3>
+                        <p class="text-sm text-neonCyan tracking-widest uppercase font-bold relative z-10 text-glow-cyan mb-4">Digital Alchemist</p>
+                        <div class="flex gap-4 relative z-10">
+                            <a href="#" class="w-9 h-9 rounded-xl glass-panel border border-white/10 hover:border-neonCyan flex items-center justify-center text-gray-400 hover:text-neonCyan transition-all duration-300"><i class="fa-brands fa-github"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-xl glass-panel border border-white/10 hover:border-neonPurple flex items-center justify-center text-gray-400 hover:text-neonPurple transition-all duration-300"><i class="fa-brands fa-linkedin-in"></i></a>
+                            <a href="#" class="w-9 h-9 rounded-xl glass-panel border border-white/10 hover:border-neonPink flex items-center justify-center text-gray-400 hover:text-neonPink transition-all duration-300"><i class="fa-brands fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-7 flex flex-col justify-center text-left scroll-reveal-right">
+                <h3 class="text-2xl md:text-3xl font-bold text-white mb-6">Membawa Desain Tradisional Menuju Era <span class="bg-gradient-to-r from-neonCyan to-neonPink bg-clip-text text-transparent">Imersif Masa Depan</span></h3>
+                <p class="text-gray-400 leading-relaxed font-light mb-6">
+                    Saya adalah seorang kreator multi-disiplin yang berfokus pada pengembangan produk digital kelas dunia dengan visual mewah berkualitas premium. Menggabungkan seni desain visual dengan kekuatan kode modern yang bersih dan sangat interaktif.
+                </p>
+                <p class="text-gray-400 leading-relaxed font-light mb-8">
+                    Dengan fokus yang kuat pada estetika modern tahun 2026, saya mendesain interfaces yang tidak hanya memanjakan mata, melainkan juga menghadirkan user experience yang sangat responsif, intuitif, dan kaya akan animasi mikro berkelas tinggi.
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 counter-section">
+                    <div class="glass-panel p-4 rounded-xl border border-white/5 text-center">
+                        <h2 class="text-3xl font-black text-neonCyan text-glow-cyan mb-1 count-number" data-target="48">0</h2>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-gray-500">Projects Done</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-white/5 text-center">
+                        <h2 class="text-3xl font-black text-neonPurple text-glow-purple mb-1 count-number" data-target="32">0</h2>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-gray-500">Happy Clients</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-white/5 text-center">
+                        <h2 class="text-3xl font-black text-neonPink text-glow-pink mb-1 count-number" data-target="5">0</h2>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-gray-500">Years Exp</p>
+                    </div>
+                    <div class="glass-panel p-4 rounded-xl border border-white/5 text-center">
+                        <h2 class="text-3xl font-black text-magenta text-shadow-sm mb-1 count-number" data-target="12">0</h2>
+                        <p class="text-[10px] uppercase font-bold tracking-wider text-gray-500">Awards Won</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="skills" class="py-32 px-4 relative bg-black/20 backdrop-blur-3xl">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 section-header">
+                <h4 class="text-xs font-bold tracking-widest text-neonPurple uppercase mb-2">02 / CORE ABILITIES</h4>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-white">Technical Arsenal</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-neonPurple to-magenta mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="animated-gradient-border p-[1px] skill-card-trigger">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4 relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="flex justify-between items-center">
+                            <div class="w-12 h-12 rounded-xl bg-neonCyan/10 border border-neonCyan/20 flex items-center justify-center text-neonCyan text-xl">
+                                <i class="fa-brands fa-html5"></i>
+                            </div>
+                            <span class="text-sm font-bold text-neonCyan bg-neonCyan/10 px-3 py-1 rounded-full">95%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">HTML Architecture</h3>
+                        <p class="text-xs text-gray-400 font-light">Struktur kode semantik kelas tinggi, SEO optimized, dan aksesibilitas standar industri modern global.</p>
+                    </div>
+                </div>
+
+                <div class="animated-gradient-border p-[1px] skill-card-trigger">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4 relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="flex justify-between items-center">
+                            <div class="w-12 h-12 rounded-xl bg-electricBlue/10 border border-electricBlue/20 flex items-center justify-center text-electricBlue text-xl">
+                                <i class="fa-brands fa-css3-alt"></i>
+                            </div>
+                            <span class="text-sm font-bold text-electricBlue bg-electricBlue/10 px-3 py-1 rounded-full">92%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Advanced CSS / Tailwind</h3>
+                        <p class="text-xs text-gray-400 font-light">Layout kompleks grid, flexbox, animasi micro-interaction kelas dunia, responsive di semua resolusi screen.</p>
+                    </div>
+                </div>
+
+                <div class="animated-gradient-border p-[1px] skill-card-trigger">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4 relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="flex justify-between items-center">
+                            <div class="w-12 h-12 rounded-xl bg-neonPurple/10 border border-neonPurple/20 flex items-center justify-center text-neonPurple text-xl">
+                                <i class="fa-brands fa-js"></i>
+                            </div>
+                            <span class="text-sm font-bold text-neonPurple bg-neonPurple/10 px-3 py-1 rounded-full">88%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">JavaScript / GSAP</h3>
+                        <p class="text-xs text-gray-400 font-light">Logika web kompleks, manipulasi DOM real-time, logic integrasi, engine animasi tingkat lanjut yang sangat fluid.</p>
+                    </div>
+                </div>
+
+                <div class="animated-gradient-border p-[1px] skill-card-trigger">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4 relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="flex justify-between items-center">
+                            <div class="w-12 h-12 rounded-xl bg-neonPink/10 border border-neonPink/20 flex items-center justify-center text-neonPink text-xl">
+                                <i class="fa-solid fa-compass-drafting"></i>
+                            </div>
+                            <span class="text-sm font-bold text-neonPink bg-neonPink/10 px-3 py-1 rounded-full">90%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">UI/UX Crafting</h3>
+                        <p class="text-xs text-gray-400 font-light">Prototyping premium, riset user flow mendalam, wireframing, aplikasi desain dengan estetika mewah eksklusif.</p>
+                    </div>
+                </div>
+
+                <div class="animated-gradient-border p-[1px] skill-card-trigger">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4 relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="flex justify-between items-center">
+                            <div class="w-12 h-12 rounded-xl bg-magenta/10 border border-magenta/20 flex items-center justify-center text-magenta text-xl">
+                                <i class="fa-solid fa-bezier-curve"></i>
+                            </div>
+                            <span class="text-sm font-bold text-magenta bg-magenta/10 px-3 py-1 rounded-full">85%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Graphic Design</h3>
+                        <p class="text-xs text-gray-400 font-light">Aset branding perusahaan, manipulasi vektor premium, desain promosi, identitas digital yang berkarakter kuat.</p>
+                    </div>
+                </div>
+
+                <div class="animated-gradient-border p-[1px] skill-card-trigger">
+                    <div class="glass-panel p-6 rounded-2xl border border-white/5 flex flex-col gap-4 relative overflow-hidden" data-tilt data-tilt-glare data-tilt-max-glare="0.1">
+                        <div class="flex justify-between items-center">
+                            <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white text-xl">
+                                <i class="fa-solid fa-pen-nib"></i>
+                            </div>
+                            <span class="text-sm font-bold text-white bg-white/10 px-3 py-1 rounded-full">82%</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-white">Content Architecture</h3>
+                        <p class="text-xs text-gray-400 font-light">Copywriting persuasif untuk konversi tinggi, penyusunan narasi produk digital agar memikat target pasar spesifik.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="portfolio" class="py-32 px-4 max-w-6xl mx-auto relative">
+        <div class="text-center mb-16 section-header">
+            <h4 class="text-xs font-bold tracking-widest text-neonPink uppercase mb-2">03 / CURATED EXHIBITION</h4>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white">Selected Projects Showcase</h2>
+            <div class="w-16 h-1 bg-gradient-to-r from-neonPink to-magenta mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="flex flex-wrap justify-center gap-3 mb-12 portfolio-tabs">
+            <button class="filter-btn premium-btn px-6 py-2 rounded-xl text-xs font-bold tracking-widest text-gray-400 hover:text-white border border-white/5 active" data-filter="all">ALL VISIONS</button>
+            <button class="filter-btn premium-btn px-6 py-2 rounded-xl text-xs font-bold tracking-widest text-gray-400 hover:text-white border border-white/5" data-filter="web">WEB REVOLUTION</button>
+            <button class="filter-btn premium-btn px-6 py-2 rounded-xl text-xs font-bold tracking-widest text-gray-400 hover:text-white border border-white/5" data-filter="ui">UI/UX CORE</button>
+            <button class="filter-btn premium-btn px-6 py-2 rounded-xl text-xs font-bold tracking-widest text-gray-400 hover:text-white border border-white/5" data-filter="brand">BRAND DESIGN</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="portfolio-grid">
+            <div class="portfolio-item glass-panel rounded-2xl overflow-hidden border border-white/5 group relative flex flex-col justify-between" data-category="web">
+                <div class="relative overflow-hidden aspect-video bg-gradient-to-br from-neonCyan/30 to-electricBlue/30 flex items-center justify-center">
+                    <i class="fa-solid fa-rocket text-5xl text-white/50 group-hover:scale-125 transition-transform duration-500"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold text-neonCyan uppercase tracking-widest block mb-2">Web Revolution</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Aetherial SaaS Portal</h3>
+                    <p class="text-xs text-gray-400 font-light mb-4">Platform analitik cloud modern dengan interface 3D imersif dan visualisasi data real-time tercepat.</p>
+                    <button onclick="openModal('Aetherial SaaS Portal', 'Web Revolution', 'Platform analitik awan masa depan dengan integrasi kecerdasan buatan, visualisasi data real-time berbasis WebGL, dan interface glassmorphism premium yang memberikan pengalaman kontrol data tanpa batas bagi enterprise kelas atas.', 'HTML5, Tailwind CSS, JavaScript, GSAP Engine')" class="premium-btn px-4 py-2.5 rounded-xl text-xs font-bold text-white border border-white/10 hover:border-neonCyan hover:text-neonCyan flex items-center gap-2">
+                        VIEW INSPECTION <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="portfolio-item glass-panel rounded-2xl overflow-hidden border border-white/5 group relative flex flex-col justify-between" data-category="ui">
+                <div class="relative overflow-hidden aspect-video bg-gradient-to-br from-neonPurple/30 to-magenta/30 flex items-center justify-center">
+                    <i class="fa-solid fa-wallet text-5xl text-white/50 group-hover:scale-125 transition-transform duration-500"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold text-neonPurple uppercase tracking-widest block mb-2">UI/UX Core</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Nexus NeoBank App</h3>
+                    <p class="text-xs text-gray-400 font-light mb-4">Mobile banking interface premium yang berfokus pada kemudahan transaksi crypto dan fiat eksekutif.</p>
+                    <button onclick="openModal('Nexus NeoBank App', 'UI/UX Core', 'Aplikasi perbankan generasi baru yang menyatukan sistem manajemen aset kripto dengan perbankan konvensional dalam genggaman. Menawarkan dashboard interaktif, sistem keamanan biometrik berlapis, dan animasi transisi premium ultra responsif.', 'Figma Prototyping, Glassmorphic UI System')" class="premium-btn px-4 py-2.5 rounded-xl text-xs font-bold text-white border border-white/10 hover:border-neonPurple hover:text-neonPurple flex items-center gap-2">
+                        VIEW INSPECTION <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="portfolio-item glass-panel rounded-2xl overflow-hidden border border-white/5 group relative flex flex-col justify-between" data-category="brand">
+                <div class="relative overflow-hidden aspect-video bg-gradient-to-br from-neonPink/30 to-electricBlue/30 flex items-center justify-center">
+                    <i class="fa-solid fa-eye text-5xl text-white/50 group-hover:scale-125 transition-transform duration-500"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold text-neonPink uppercase tracking-widest block mb-2">Brand Design</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Vortex Identity Core</h3>
+                    <p class="text-xs text-gray-400 font-light mb-4">Rebranding total entitas korporat teknologi kuantum dengan sistem visual modular futuristik.</p>
+                    <button onclick="openModal('Vortex Identity Core', 'Brand Design', 'Pengembangan identitas korporat menyeluruh untuk startup teknologi kuantum. Meliputi desain logo dinamis, sistem ikon khusus, pedoman tipografi masa depan, serta visual marketing premium yang menempatkan brand di garda depan kompetisi industri.', 'Adobe Illustrator, Vectary 3D Modeling')" class="premium-btn px-4 py-2.5 rounded-xl text-xs font-bold text-white border border-white/10 hover:border-neonPink hover:text-neonPink flex items-center gap-2">
+                        VIEW INSPECTION <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="portfolio-item glass-panel rounded-2xl overflow-hidden border border-white/5 group relative flex flex-col justify-between" data-category="web">
+                <div class="relative overflow-hidden aspect-video bg-gradient-to-br from-electricBlue/30 to-neonPurple/30 flex items-center justify-center">
+                    <i class="fa-solid fa-store text-5xl text-white/50 group-hover:scale-125 transition-transform duration-500"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold text-electricBlue uppercase tracking-widest block mb-2">Web Revolution</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Krypton NFT Market</h3>
+                    <p class="text-xs text-gray-400 font-light mb-4">E-commerce eceran karya seni digital langka berkecepatan tinggi dengan smart contract terintegrasi.</p>
+                    <button onclick="openModal('Krypton NFT Market', 'Web Revolution', 'Pasar digital terdesentralisasi khusus aset digital bernilai tinggi. Dilengkapi dengan galeri interaktif 360 derajat, pelacakan histori blockchain instan, dan proses check-out super lancar yang dirancang untuk kolektor modern papan atas.', 'HTML5, Tailwind, JavaScript, Ethers.js API')" class="premium-btn px-4 py-2.5 rounded-xl text-xs font-bold text-white border border-white/10 hover:border-electricBlue hover:text-electricBlue flex items-center gap-2">
+                        VIEW INSPECTION <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="portfolio-item glass-panel rounded-2xl overflow-hidden border border-white/5 group relative flex flex-col justify-between" data-category="ui">
+                <div class="relative overflow-hidden aspect-video bg-gradient-to-br from-magenta/30 to-neonCyan/30 flex items-center justify-center">
+                    <i class="fa-solid fa-ghost text-5xl text-white/50 group-hover:scale-125 transition-transform duration-500"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold text-magenta uppercase tracking-widest block mb-2">UI/UX Core</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Omniverse Stream HUD</h3>
+                    <p class="text-xs text-gray-400 font-light mb-4">Desain arsitektur overlay kontrol dashboard untuk ekosistem VR dan streaming multimedia premium.</p>
+                    <button onclick="openModal('Omniverse Stream HUD', 'UI/UX Core', 'Arsitektur antarmuka overlay canggih untuk streamer profesional dan kreator konten dunia virtual. Mengutamakan penempatan widget dinamis, pemantauan performa real-time, dan sistem notifikasi kosmetik terintegrasi yang tampak futuristik.', 'Figma Advanced Component Systems')" class="premium-btn px-4 py-2.5 rounded-xl text-xs font-bold text-white border border-white/10 hover:border-magenta hover:text-magenta flex items-center gap-2">
+                        VIEW INSPECTION <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="portfolio-item glass-panel rounded-2xl overflow-hidden border border-white/5 group relative flex flex-col justify-between" data-category="brand">
+                <div class="relative overflow-hidden aspect-video bg-gradient-to-br from-neonCyan/30 to-neonPink/30 flex items-center justify-center">
+                    <i class="fa-solid fa-shield-halved text-5xl text-white/50 group-hover:scale-125 transition-transform duration-500"></i>
+                </div>
+                <div class="p-6">
+                    <span class="text-[10px] font-bold text-neonCyan uppercase tracking-widest block mb-2">Brand Design</span>
+                    <h3 class="text-xl font-bold text-white mb-2">Titan Security Matrix</h3>
+                    <p class="text-xs text-gray-400 font-light mb-4">Sistem perancangan aset visual branding komprehensif bagi firma keamanan cyber global nasional.</p>
+                    <button onclick="openModal('Titan Security Matrix', 'Brand Design', 'Rebranding total identitas visual firma pakar proteksi infrastruktur siber kritis nasional. Meliputi logomark kokoh berkarakteristik tameng digital, kartu nama bertekstur premium, desain seragam operasional, hingga panduan aplikasi media digital modern.', 'Brand Strategy, Advanced Vector Graphics')" class="premium-btn px-4 py-2.5 rounded-xl text-xs font-bold text-white border border-white/10 hover:border-neonCyan hover:text-neonCyan flex items-center gap-2">
+                        VIEW INSPECTION <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" class="py-32 px-4 relative bg-black/20 backdrop-blur-3xl">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 section-header">
+                <h4 class="text-xs font-bold tracking-widest text-neonCyan uppercase mb-2">04 / PREMIUM CAPABILITIES</h4>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-white">Elite Signature Services</h2>
+                <div class="w-16 h-1 bg-gradient-to-r from-neonCyan to-electricBlue mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glass-panel p-8 rounded-3xl border border-white/5 relative group hover:-translate-y-2 transition-all duration-500 overflow-hidden services-card-trigger">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-neonCyan/10 rounded-full blur-2xl group-hover:bg-neonCyan/20 transition-all"></div>
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neonCyan to-electricBlue flex items-center justify-center text-black text-2xl font-bold mb-6 shadow-[0_0_20px_rgba(0,229,255,0.3)]">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Web Development</h3>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">Membangun website tangguh berkecepatan tinggi dengan basis clean-code modern, teroptimasi penuh, aman, dan mutakhir.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl border border-white/5 relative group hover:-translate-y-2 transition-all duration-500 overflow-hidden services-card-trigger">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-neonPurple/10 rounded-full blur-2xl group-hover:bg-neonPurple/20 transition-all"></div>
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neonPurple to-magenta flex items-center justify-center text-black text-2xl font-bold mb-6 shadow-[0_0_20px_rgba(139,92,246,0.3)]">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">UI/UX Crafting</h3>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">Mendesain arsitektur wireframe antarmuka pengguna digital yang mewah, mudah dipahami, berestetika, dan berorientasi konversi.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl border border-white/5 relative group hover:-translate-y-2 transition-all duration-500 overflow-hidden services-card-trigger">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-neonPink/10 rounded-full blur-2xl group-hover:bg-neonPink/20 transition-all"></div>
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-neonPink to-electricBlue flex items-center justify-center text-black text-2xl font-bold mb-6 shadow-[0_0_20px_rgba(255,79,216,0.3)]">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Landing Pages</h3>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">Halaman penawaran produk bernilai komersial tinggi, terstruktur dengan copywriting tajam, serta dimaksimalkan untuk penjualan produk Anda.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl border border-white/5 relative group hover:-translate-y-2 transition-all duration-500 overflow-hidden services-card-trigger">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-magenta/10 rounded-full blur-2xl group-hover:bg-magenta/20 transition-all"></div>
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-magenta to-neonCyan flex items-center justify-center text-black text-2xl font-bold mb-6 shadow-[0_0_20px_rgba(217,70,239,0.3)]">
+                        <i class="fa-solid fa-address-card"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Elite Portfolio</h3>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">Showcase portofolio interaktif personal eksklusif yang dirancang khusus memikat agensi besar dan klien korporat internasional.</p>
+                </div>
+
+                <div class="glass-panel p-8 rounded-3xl border border-white/5 relative group hover:-translate-y-2 transition-all duration-500 overflow-hidden services-card-trigger">
+                    <div class="absolute -right-10 -top-10 w-32 h-32 bg-electricBlue/10 rounded-full blur-2xl group-hover:bg-electricBlue/20 transition-all"></div>
+                    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-electricBlue to-neonPurple flex items-center justify-center text-black text-2xl font-bold mb-6 shadow-[0_0_20px_rgba(77,111,255,0.3)]">
+                        <i class="fa-solid fa-feather"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Content Writing</h3>
+                    <p class="text-sm text-gray-400 font-light leading-relaxed">Produksi teks naratif artikulatif berbobot tinggi untuk mengisi blog korporat, deskripsi produk digital, ataupun naskah profil bisnis.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="experience" class="py-32 px-4 max-w-4xl mx-auto relative">
+        <div class="text-center mb-20 section-header">
+            <h4 class="text-xs font-bold tracking-widest text-neonPurple uppercase mb-2">05 / VIRTUAL TIMELINE</h4>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white">Professional Journey</h2>
+            <div class="w-16 h-1 bg-gradient-to-r from-neonPurple to-neonCyan mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="relative border-l-2 border-white/10 ml-4 md:ml-32 timeline-container">
+            <div class="mb-12 ml-8 relative timeline-node">
+                <span class="absolute -left-[45px] top-1.5 bg-[#030014] w-7 h-7 rounded-full border-2 border-neonCyan flex items-center justify-center text-[10px] text-neonCyan shadow-[0_0_15px_rgba(0,229,255,0.4)]">
+                    <i class="fa-solid fa-briefcase"></i>
+                </span>
+                <div class="absolute left-[-160px] top-2 hidden md:block text-right w-28">
+                    <span class="text-xs font-bold text-neonCyan tracking-wider">2024 - PRESENT</span>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-white/5 relative">
+                    <span class="text-[10px] font-bold text-neonCyan tracking-widest block md:hidden mb-2">2024 - PRESENT</span>
+                    <h3 class="text-xl font-bold text-white mb-1">Lead Creative Developer</h3>
+                    <h4 class="text-sm text-gray-400 font-medium mb-3">Aether Digital Studio</h4>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed">Memimpin tim teknis dalam merancang arsitektur interfaces interaktif kelas atas, mengoptimalkan pipeline front-end produk web komersial internasional.</p>
+                </div>
+            </div>
+
+            <div class="mb-12 ml-8 relative timeline-node">
+                <span class="absolute -left-[45px] top-1.5 bg-[#030014] w-7 h-7 rounded-full border-2 border-neonPurple flex items-center justify-center text-[10px] text-neonPurple shadow-[0_0_15px_rgba(139,92,246,0.4)]">
+                    <i class="fa-solid fa-briefcase"></i>
+                </span>
+                <div class="absolute left-[-160px] top-2 hidden md:block text-right w-28">
+                    <span class="text-xs font-bold text-neonPurple tracking-wider">2022 - 2024</span>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-white/5 relative">
+                    <span class="text-[10px] font-bold text-neonPurple tracking-widest block md:hidden mb-2">2022 - 2024</span>
+                    <h3 class="text-xl font-bold text-white mb-1">Senior UI/UX Engineer</h3>
+                    <h4 class="text-sm text-gray-400 font-medium mb-3">Vortex Innovations Corp</h4>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed">Meriset komprehensif user flow aplikasi FinTech seluler, merumuskan desain sistem modular canggih yang diadopsi di berbagai platform multi-bahasa.</p>
+                </div>
+            </div>
+
+            <div class="mb-12 ml-8 relative timeline-node">
+                <span class="absolute -left-[45px] top-1.5 bg-[#030014] w-7 h-7 rounded-full border-2 border-neonPink flex items-center justify-center text-[10px] text-neonPink shadow-[0_0_15px_rgba(255,79,216,0.4)]">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </span>
+                <div class="absolute left-[-160px] top-2 hidden md:block text-right w-28">
+                    <span class="text-xs font-bold text-neonPink tracking-wider">2018 - 2022</span>
+                </div>
+                <div class="glass-panel p-6 rounded-2xl border border-white/5 relative">
+                    <span class="text-[10px] font-bold text-neonPink tracking-widest block md:hidden mb-2">2018 - 2022</span>
+                    <h3 class="text-xl font-bold text-white mb-1">Bachelor of Computer Science</h3>
+                    <h4 class="text-sm text-gray-400 font-medium mb-3">Cyber Tech University</h4>
+                    <p class="text-xs text-gray-400 font-light leading-relaxed">Lulus dengan predikat kehormatan tertinggi. Fokus riset akademis pada arsitektur rekayasa perangkat lunak interaktif dan grafis komputasi modern.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="contact" class="py-32 px-4 max-w-4xl mx-auto relative">
+        <div class="text-center mb-16 section-header">
+            <h4 class="text-xs font-bold tracking-widest text-neonPink uppercase mb-2">06 / INITIATE CONVERSATION</h4>
+            <h2 class="text-3xl md:text-5xl font-extrabold text-white">Let's Craft Greatness</h2>
+            <div class="w-16 h-1 bg-gradient-to-r from-neonPink to-electricBlue mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="animated-gradient-border p-[1px] form-container-trigger">
+            <div class="glass-panel p-8 md:p-12 rounded-3xl border border-white/5 relative overflow-hidden shadow-2xl">
+                <form id="contact-form" class="space-y-8 relative z-10" onsubmit="handleFormSubmit(event)">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="relative">
+                            <input type="text" id="form-name" required placeholder=" " class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-neonCyan transition-all peer placeholder-opacity-0">
+                            <label for="form-name" class="absolute left-5 top-4 text-xs font-semibold text-gray-500 pointer-events-none transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:top-[-10px] peer-focus:text-xs peer-focus:text-neonCyan peer-focus:bg-[#090623] peer-focus:px-2 rounded">YOUR FULL NAME</label>
+                        </div>
+                        <div class="relative">
+                            <input type="email" id="form-email" required placeholder=" " class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-neonCyan transition-all peer placeholder-opacity-0">
+                            <label for="form-email" class="absolute left-5 top-4 text-xs font-semibold text-gray-500 pointer-events-none transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:top-[-10px] peer-focus:text-xs peer-focus:text-neonCyan peer-focus:bg-[#090623] peer-focus:px-2 rounded">YOUR ELECTRONIC EMAIL</label>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <textarea id="form-message" required rows="5" placeholder=" " class="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white text-sm focus:outline-none focus:border-neonCyan transition-all peer placeholder-opacity-0 resize-none"></textarea>
+                        <label for="form-message" class="absolute left-5 top-4 text-xs font-semibold text-gray-500 pointer-events-none transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:top-[-10px] peer-focus:text-xs peer-focus:text-neonCyan peer-focus:bg-[#090623] peer-focus:px-2 rounded">TRANSMIT BRIEF PROJECT SPECIFICATION</label>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button type="submit" class="premium-btn magnetic-target px-8 py-4 rounded-2xl text-xs font-bold tracking-widest text-black bg-gradient-to-r from-neonCyan via-electricBlue to-neonPurple hover:shadow-[0_0_35px_rgba(0,229,255,0.4)] flex items-center gap-2 transform active:scale-95 transition-all">
+                            SECURE TRANSMISSION <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="form-success" class="absolute inset-0 bg-[#04011a]/95 hidden flex-col items-center justify-center p-8 text-center transition-all z-20">
+                    <div class="w-20 h-20 bg-neonCyan/10 rounded-full border border-neonCyan flex items-center justify-center text-neonCyan text-3xl mb-6 shadow-[0_0_30px_rgba(0,229,255,0.2)] animate-pulse">
+                        <i class="fa-solid fa-circle-check"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-white mb-2">Transmission Secure</h3>
+                    <p class="text-gray-400 max-w-md font-light text-sm">Data pesan berhasil terenkripsi dan dikirim ke sistem utama Amir. Respon balasan akan segera dikirimkan ke kotak masuk email Anda dalam kurun waktu 1x24 jam.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="border-t border-white/5 bg-[#02000c] py-12 px-4 relative">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="text-center md:text-left">
+                <a href="#home" class="text-xl font-black text-white tracking-wider">AMIR<span class="text-neonCyan">.</span></a>
+                <p class="text-xs text-gray-500 mt-2 font-light">&copy; 2026 AMIR. All Rights Reserved. Engineered for Digital Dominance.</p>
+            </div>
+            
+            <div class="flex gap-4">
+                <a href="#" class="w-10 h-10 rounded-xl glass-panel border border-white/5 hover:border-neonCyan flex items-center justify-center text-gray-400 hover:text-neonCyan hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] transition-all duration-300"><i class="fa-brands fa-github"></i></a>
+                <a href="#" class="w-10 h-10 rounded-xl glass-panel border border-white/5 hover:border-neonPurple flex items-center justify-center text-gray-400 hover:text-neonPurple hover:shadow-[0_0_15px_rgba(139,92,246,0.2)] transition-all duration-300"><i class="fa-brands fa-linkedin-in"></i></a>
+                <a href="#" class="w-10 h-10 rounded-xl glass-panel border border-white/5 hover:border-neonPink flex items-center justify-center text-gray-400 hover:text-neonPink hover:shadow-[0_0_15px_rgba(255,79,216,0.2)] transition-all duration-300"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="w-10 h-10 rounded-xl glass-panel border border-white/5 hover:border-magenta flex items-center justify-center text-gray-400 hover:text-magenta hover:shadow-[0_0_15px_rgba(217,70,239,0.2)] transition-all duration-300"><i class="fa-brands fa-dribbble"></i></a>
+            </div>
+
+            <div>
+                <a href="#home" class="premium-btn w-10 h-10 rounded-xl border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:border-white transition-all"><i class="fa-solid fa-arrow-up"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="portfolio-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-xl hidden opacity-0 transition-opacity duration-300 items-center justify-center p-4">
+        <div class="glass-panel border border-white/10 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto relative p-8 md:p-10 shadow-2xl transform scale-95 transition-transform duration-300" id="modal-content">
+            <button onclick="closeModal()" class="absolute top-6 right-6 w-10 h-10 rounded-full glass-panel border border-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <span class="text-[10px] font-extrabold tracking-widest text-neonCyan uppercase mb-2 block" id="modal-badge">Category</span>
+            <h2 class="text-3xl font-black text-white mb-4" id="modal-title">Project Name</h2>
+            <div class="w-full h-1 bg-gradient-to-r from-neonCyan to-neonPurple mb-6 rounded-full"></div>
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Project Vision Brief</h4>
+            <p class="text-sm text-gray-300 font-light leading-relaxed mb-6" id="modal-desc">Detailed descriptions of project capabilities and systems integrations.</p>
+            <div class="glass-panel p-4 rounded-xl border border-white/5 mb-8">
+                <h5 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Technologies Deployed</h5>
+                <p class="text-xs text-neonCyan font-mono font-medium" id="modal-tech">Tech Stack Specifications</p>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="premium-btn px-6 py-3 rounded-xl text-xs font-bold tracking-widest text-black bg-gradient-to-r from-neonCyan to-electricBlue w-full text-center">LAUNCH LIVE PREVIEW</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // System Hardware Integration Setup Verification Init Engine
+        document.addEventListener('DOMContentLoaded', () => {
+            initCursorEngine();
+            initParticlesBackground();
+            initAutoTypingEngine();
+            initMagneticInteractions();
+            initScrollAnimations();
+            initPortfolioFilter();
+            initRippleEffect();
+            initMobileMenuToggle();
+        });
+
+        // 1. Premium Custom Dynamic Cursor Engine Tracking Setup
+        function initCursorEngine() {
+            const cursor = document.getElementById('cursor');
+            const glow = document.getElementById('cursor-glow');
+            
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, { x: e.clientX, y: e.clientY, duration: 0, cubicBezier: "power3.out" });
+                gsap.to(glow, { x: e.clientX, y: e.clientY, duration: 0.15, cubicBezier: "power2.out" });
+            });
+
+            // Target Anchor Interactive Interactive Scale Enhancements
+            const interactiveElements = document.querySelectorAll('a, button, .portfolio-item, .filter-btn, .animated-gradient-border');
+            interactiveElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.style.width = '20px';
+                    cursor.style.height = '20px';
+                    cursor.style.background = 'rgba(0, 229, 255, 0.8)';
+                    glow.style.transform = 'translate(-50%, -50%) scale(1.6)';
+                    glow.style.borderColor = '#FF4FD8';
+                    glow.style.boxShadow = '0 0 25px rgba(255, 79, 216, 0.4)';
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.style.width = '8px';
+                    cursor.style.height = '8px';
+                    cursor.style.background = '#fff';
+                    glow.style.transform = 'translate(-50%, -50%) scale(1)';
+                    glow.style.borderColor = 'rgba(0, 229, 255, 0.4)';
+                    glow.style.boxShadow = '0 0 15px rgba(0, 229, 255, 0.2)';
+                });
+            });
+        }
+
+        // 2. High-Tech Fluid Star-Link Micro Particles Configuration
+        function initParticlesBackground() {
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": { "value": 65, "density": { "enable": true, "value_area": 900 } },
+                    "color": { "value": ["#00E5FF", "#8B5CF6", "#FF4FD8"] },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.35, "random": true, "anim": { "enable": true, "speed": 1, "opacity_min": 0.1, "sync": false } },
+                    "size": { "value": 2.5, "random": true, "anim": { "enable": true, "speed": 2, "size_min": 0.5, "sync": false } },
+                    "line_linked": { "enable": true, "distance": 130, "color": "#4D6FFF", "opacity": 0.15, "width": 0.8 },
+                    "move": { "enable": true, "speed": 0.8, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+                },
+                "interactivity": {
+                    "detect_on": "canvas",
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                    "modes": { "grab": { "distance": 160, "line_linked": { "opacity": 0.45 } }, "push": { "particles_nb": 3 } }
+                },
+                "retina_detect": true
+            });
+        }
+
+        // 3. Dynamic Auto Typing Text Machine Terminal Array Setup
+        function initAutoTypingEngine() {
+            const professions = ["Author.", "Designer.", "Programmer.", "Web Developer.", "Creative Creator."];
+            let currentWordIdx = 0;
+            let currentLetterIdx = 0;
+            let isDeleting = false;
+            const typingSpeed = 120;
+            const erasingSpeed = 60;
+            const delayBetweenWords = 2500;
+            const targetElement = document.getElementById('typing-text');
+
+            function typeEffect() {
+                const currentFullWord = professions[currentWordIdx];
+                
+                if (isDeleting) {
+                    targetElement.textContent = currentFullWord.substring(0, currentLetterIdx - 1);
+                    currentLetterIdx--;
+                } else {
+                    targetElement.textContent = currentFullWord.substring(0, currentLetterIdx + 1);
+                    currentLetterIdx++;
+                }
+
+                if (!isDeleting && currentLetterIdx === currentFullWord.length) {
+                    isDeleting = true;
+                    setTimeout(typeEffect, delayBetweenWords);
+                } else if (isDeleting && currentLetterIdx === 0) {
+                    isDeleting = false;
+                    currentWordIdx = (currentWordIdx + 1) % professions.length;
+                    setTimeout(typeEffect, 400);
+                } else {
+                    setTimeout(typeEffect, isDeleting ? erasingSpeed : typingSpeed);
+                }
+            }
+            setTimeout(typeEffect, 1000);
+        }
+
+        // 4. Asset Magnetic Center Tracking Core Algorithm Matrix
+        function initMagneticInteractions() {
+            if (window.innerWidth > 768) {
+                const targets = document.querySelectorAll('.magnetic-target');
+                targets.forEach(btn => {
+                    btn.addEventListener('mousemove', (e) => {
+                        const rect = btn.getBoundingClientRect();
+                        const x = e.clientX - rect.left - rect.width / 2;
+                        const y = e.clientY - rect.top - rect.height / 2;
+                        gsap.to(btn, { x: x * 0.45, y: y * 0.45, duration: 0.3, ease: "power2.out" });
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        gsap.to(btn, { x: 0, y: 0, duration: 0.5, ease: "elastic.out(1, 0.3)" });
+                    });
+                });
+            }
+        }
+
+        // 5. GSAP Premium Scroll Trigger Orchestration Interface Matrix
+        function initScrollAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Navbar Reveal Entry Phase Animation
+            gsap.from('.navbar-container', { y: -50, opacity: 0, duration: 1.2, ease: 'power4.out', delay: 0.2 });
+
+            // Universal Section Content Header Reveal Execution
+            document.querySelectorAll('.section-header').forEach(header => {
+                gsap.from(header, {
+                    scrollTrigger: { trigger: header, start: 'top 85%' },
+                    y: 40, opacity: 0, duration: 1, ease: 'power3.out'
+                });
+            });
+
+            // About Subsection Custom Split Animations
+            gsap.from('.scroll-reveal-left', {
+                scrollTrigger: { trigger: '#about', start: 'top 75%' },
+                x: -60, opacity: 0, duration: 1.2, ease: 'power3.out'
+            });
+            gsap.from('.scroll-reveal-right', {
+                scrollTrigger: { trigger: '#about', start: 'top 75%' },
+                x: 60, opacity: 0, duration: 1.2, ease: 'power3.out',
+                onComplete: startCounterSystem
+            });
+
+            // Skill Node Unit Segment Cascade Stagger Reveal Animation Phase
+            gsap.from('.skill-card-trigger', {
+                scrollTrigger: { trigger: '#skills', start: 'top 70%' },
+                y: 50, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.15
+            });
+
+            // Portfolio Dashboard Items Matrix Reveal Sequencer Link
+            gsap.from('.portfolio-item', {
+                scrollTrigger: { trigger: '#portfolio', start: 'top 70%' },
+                scale: 0.9, opacity: 0, duration: 0.8, ease: 'power2.out', stagger: 0.15
+            });
+
+            // Services Grid Component Card Cascade Reveal Orchestration Block
+            gsap.from('.services-card-trigger', {
+                scrollTrigger: { trigger: '#services', start: 'top 70%' },
+                y: 40, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.15
+            });
+
+            // Timeline Node Sequence Chain Progress Indicator Matrix Line 
+            gsap.from('.timeline-node', {
+                scrollTrigger: { trigger: '#experience', start: 'top 70%' },
+                x: 30, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.2
+            });
+
+            // Form Content Frame Section Anchor Grid Upwards Smooth Slide Phase
+            gsap.from('.form-container-trigger', {
+                scrollTrigger: { trigger: '#contact', start: 'top 75%' },
+                y: 50, opacity: 0, duration: 1, ease: 'power4.out'
+            });
+        }
+
+        // 6. Dynamic Numerical Increment Matrix Controller Engine Routine
+        function startCounterSystem() {
+            const numbers = document.querySelectorAll('.count-number');
+            numbers.forEach(num => {
+                const targetValue = parseInt(num.getAttribute('data-target'));
+                let currentVal = 0;
+                const duration = 2000; 
+                const incrementStep = targetValue / (duration / 16);
+
+                const updateCount = () => {
+                    currentVal += incrementStep;
+                    if (currentVal >= targetValue) {
+                        num.textContent = targetValue + "+";
+                    } else {
+                        num.textContent = Math.floor(currentVal) + "+";
+                        requestAnimationFrame(updateCount);
+                    }
+                };
+                requestAnimationFrame(updateCount);
+            });
+        }
+
+        // 7. Portfolio Categories Filter Segment Operations Manager Setup
+        function initPortfolioFilter() {
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const items = document.querySelectorAll('.portfolio-item');
+
+            filterButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterButtons.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+
+                    const chosenCategory = btn.getAttribute('data-filter');
+
+                    // Smooth GSAP Cross-Fade Sorting Phase Matrix
+                    gsap.to(items, {
+                        scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => {
+                            items.forEach(item => {
+                                if (chosenCategory === 'all' || item.getAttribute('data-category') === chosenCategory) {
+                                    item.style.display = 'flex';
+                                    gsap.to(item, { scale: 1, opacity: 1, duration: 0.4, ease: 'power2.out' });
+                                } else {
+                                    item.style.display = 'none';
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        }
+
+        // 8. Visual Asset Ripple Hydro Interaction Click Core Generator Setup
+        function initRippleEffect() {
+            document.addEventListener('click', (e) => {
+                const targets = e.target.closest('.premium-btn, button');
+                if (!targets) return;
+
+                const circle = document.createElement('span');
+                circle.classList.add('ripple');
+                
+                const boundRect = targets.getBoundingClientRect();
+                const xCoord = e.clientX - boundRect.left;
+                const yCoord = e.clientY - boundRect.top;
+
+                circle.style.left = `${xCoord}px`;
+                circle.style.top = `${yCoord}px`;
+
+                targets.appendChild(circle);
+
+                setTimeout(() => circle.remove(), 600);
+            });
+        }
+
+        // 9. Mobile Responsive Collapsible Navigation Core System Menu
+        function initMobileMenuToggle() {
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const lines = [document.getElementById('line1'), document.getElementById('line2'), document.getElementById('line3')];
+
+            let isOpen = false;
+
+            mobileBtn.addEventListener('click', () => {
+                isOpen = !isOpen;
+                if (isOpen) {
+                    mobileMenu.classList.remove('hidden');
+                    setTimeout(() => {
+                        mobileMenu.classList.remove('opacity-0', '-translate-y-4');
+                        mobileMenu.classList.add('opacity-100', 'translate-y-0');
+                    }, 50);
+                    lines[0].style.transform = 'rotate(45deg) translate(6px, 6px)';
+                    lines[1].style.opacity = '0';
+                    lines[2].style.transform = 'rotate(-45deg) translate(6px, -6px)';
+                } else {
+                    closeMenu();
+                }
+            });
+
+            document.querySelectorAll('.mobile-nav-link').forEach(link => {
+                link.addEventListener('click', () => closeMenu());
+            });
+
+            function closeMenu() {
+                isOpen = false;
+                mobileMenu.classList.remove('opacity-100', 'translate-y-0');
+                mobileMenu.classList.add('opacity-0', '-translate-y-4');
+                setTimeout(() => mobileMenu.add('hidden'), 300);
+                lines[0].style.transform = 'none';
+                lines[1].style.opacity = '1';
+                lines[2].style.transform = 'none';
+            }
+        }
+
+        // 10. Portfolio Micro Modal Frame Inspector Operations System
+        const modal = document.getElementById('portfolio-modal');
+        const modalContent = document.getElementById('modal-content');
+
+        function openModal(title, category, desc, tech) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-badge').textContent = category;
+            document.getElementById('modal-desc').textContent = desc;
+            document.getElementById('modal-tech').textContent = tech;
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 50);
+        }
+
+        function closeModal() {
+            modal.classList.remove('opacity-100');
+            modal.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // 11. Secure Contact Forms Verification Submission Dispatch Simulator
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const submitBtn = event.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `PROCESSING DATA... <i class="fa-solid fa-spinner animate-spin text-[10px]"></i>`;
+
+            // Network Handshake Simplex Transmit Mockup Delayed Sequence Process
+            setTimeout(() => {
+                document.getElementById('form-success').classList.remove('hidden');
+                document.getElementById('form-success').classList.add('flex');
+                event.target.reset();
+            }, 1800);
+        }
+    </script>
+</body>
+</html>
